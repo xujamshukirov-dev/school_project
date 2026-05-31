@@ -1,0 +1,128 @@
+{% extends 'dashboard_base.html' %}
+{% block title %}Quiz Tests{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>📝 Quiz Tests</h1>
+  <p>Fan tanlang va bilimingizni sinab ko'ring</p>
+</div>
+
+{% if not tanlangan_fan %}
+<div class="card" style="margin-bottom:24px">
+  <div class="card-title" style="margin-bottom:18px">📚 Fan tanlang</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px">
+    {% for key, nomi in fanlar %}
+    <a href="?fan={{ key }}" style="text-decoration:none">
+      <div style="background:#f0faf5;border:2px solid #ddf2ea;border-radius:14px;padding:16px;text-align:center;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='#2ecc71';this.style.background='#e8faf1'" onmouseout="this.style.borderColor='#ddf2ea';this.style.background='#f0faf5'">
+        <div style="font-size:28px;margin-bottom:8px">
+          {% if key == 'matematika' %}➗{% elif key == 'fizika' %}⚡{% elif key == 'kimyo' %}🧪{% elif key == 'biologiya' %}🧬{% elif key == 'tarix' %}📜{% elif key == 'geografiya' %}🌍{% elif key == 'adabiyot' %}📖{% elif key == 'ona_tili' %}🗣️{% elif key == 'ingliz_tili' %}🇬🇧{% elif key == 'informatika' %}💻{% else %}📚{% endif %}
+        </div>
+        <div style="font-size:13px;font-weight:700;color:#1a2e23">{{ nomi }}</div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% else %}
+<div class="card" style="margin-bottom:16px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+    <div class="card-title">{{ tanlangan_fan|upper }} - Testlar</div>
+    <a href="{% url 'quiz_tests' %}" class="btn btn-outline" style="font-size:13px;padding:8px 14px">← Orqaga</a>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    {% for test in testlar %}
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:#f8fffe;border:1.5px solid #ddf2ea;border-radius:12px;transition:all 0.2s" onmouseover="this.style.borderColor='#2ecc71';this.style.background='#e8faf1'" onmouseout="this.style.borderColor='#ddf2ea';this.style.background='#f8fffe'">
+      <div>
+        <div style="font-size:15px;font-weight:800;color:#1a2e23">{{ test.mavzu }}</div>
+        <div style="font-size:12px;color:#6b9e80;margin-top:4px">
+          📋 {{ test.savollar }} ta savol &nbsp;·&nbsp; ⏱️ {{ test.vaqt }} daqiqa
+        </div>
+      </div>
+      <button onclick="boshlaTest({{ test.id }})" class="btn btn-primary" style="font-size:13px;padding:8px 18px">Boshlash →</button>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Test modali -->
+<div id="testModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center">
+  <div style="background:white;border-radius:20px;padding:36px;max-width:560px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div style="font-size:18px;font-weight:900;color:#1a2e23" id="testTitle">Test</div>
+      <div style="font-size:20px;font-weight:900;color:#e74c3c" id="timer">06:00</div>
+    </div>
+    <div id="testContent"></div>
+    <div style="display:flex;gap:10px;margin-top:20px">
+      <button class="btn btn-primary" onclick="keyingi()">Keyingi →</button>
+      <button class="btn btn-outline" onclick="yopModal()">Yopish</button>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const savollar = [
+  {s:"2x + 5 = 13 tenglamani yeching:", j:["x = 3","x = 4","x = 5","x = 6"], t:1},
+  {s:"√144 = ?", j:["11","12","13","14"], t:1},
+  {s:"3² + 4² = ?", j:["24","25","30","7"], t:1},
+  {s:"Agar a = 3, b = 4 bo'lsa, a² + b² = ?", j:["25","20","30","12"], t:0},
+  {s:"1000 ning 15% i necha?", j:["100","150","200","50"], t:1},
+];
+let joriy = 0, to'g'ri = 0, interval;
+
+function boshlaTest(id) {
+  joriy = 0; to'g'ri = 0;
+  document.getElementById('testModal').style.display = 'flex';
+  document.getElementById('testTitle').textContent = `Test #${id}`;
+  savolKo'rsat();
+  let sec = 360;
+  interval = setInterval(() => {
+    sec--;
+    const m = Math.floor(sec/60).toString().padStart(2,'0');
+    const s = (sec%60).toString().padStart(2,'0');
+    document.getElementById('timer').textContent = `${m}:${s}`;
+    if(sec <= 0) { clearInterval(interval); natija(); }
+  }, 1000);
+}
+
+function savolKo'rsat() {
+  if(joriy >= savollar.length) { natija(); return; }
+  const s = savollar[joriy];
+  document.getElementById('testContent').innerHTML = `
+    <div style="font-size:15px;font-weight:700;color:#1a2e23;margin-bottom:14px">${joriy+1}. ${s.s}</div>
+    ${s.j.map((j,i)=>`
+      <div onclick="javob(${i})" style="padding:12px 16px;margin:6px 0;background:#f0faf5;border:2px solid #ddf2ea;border-radius:10px;cursor:pointer;font-weight:600;font-size:14px;transition:all 0.2s" 
+        onmouseover="this.style.borderColor='#2ecc71'" onmouseout="this.style.borderColor='#ddf2ea'">
+        ${String.fromCharCode(65+i)}) ${j}
+      </div>
+    `).join('')}
+  `;
+}
+
+function javob(i) {
+  if(savollar[joriy].t === i) to'g'ri++;
+  joriy++;
+  savolKo'rsat();
+}
+
+function keyingi() { joriy++; savolKo'rsat(); }
+
+function natija() {
+  clearInterval(interval);
+  document.getElementById('testContent').innerHTML = `
+    <div style="text-align:center;padding:20px">
+      <div style="font-size:56px;margin-bottom:12px">🏆</div>
+      <div style="font-size:32px;font-weight:900;color:#1a9b52">${to'g'ri}/${savollar.length}</div>
+      <div style="font-size:14px;color:#6b9e80;margin-top:6px">Test yakunlandi!</div>
+      <div style="font-size:24px;font-weight:900;color:#2ecc71;margin-top:8px">${Math.round(to'g'ri/savollar.length*100)}%</div>
+    </div>
+  `;
+}
+
+function yopModal() {
+  clearInterval(interval);
+  document.getElementById('testModal').style.display = 'none';
+}
+</script>
+{% endblock %}

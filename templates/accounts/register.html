@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduNet - Ro'yxatdan o'tish</title>
+  {% load static %}
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#0d7a40,#2ecc71);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .reg-box{background:white;border-radius:24px;width:100%;max-width:560px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.2)}
+    .reg-header{background:linear-gradient(135deg,#0a5c30,#1a9b52);padding:28px 32px;text-align:center}
+    .reg-header .icon{font-size:38px;margin-bottom:8px}
+    .reg-header h2{font-size:22px;font-weight:900;color:white}
+    .reg-header p{font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px}
+    .reg-body{padding:28px 32px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .form-group{margin-bottom:14px}
+    .form-label{display:block;font-size:12.5px;font-weight:700;color:#3d6b4f;margin-bottom:5px}
+    .form-control{width:100%;padding:10px 14px;border:2px solid #ddf2ea;border-radius:10px;font-size:13.5px;font-family:'Nunito',sans-serif;color:#1a2e23;outline:none;transition:all 0.2s}
+    .form-control:focus{border-color:#2ecc71;box-shadow:0 0 0 3px rgba(46,204,113,0.1)}
+    select.form-control{cursor:pointer}
+    .btn-submit{width:100%;padding:12px;background:linear-gradient(135deg,#2ecc71,#1a9b52);color:white;border:none;border-radius:10px;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;margin-top:8px;transition:all 0.2s;box-shadow:0 4px 15px rgba(46,204,113,0.3)}
+    .btn-submit:hover{transform:translateY(-2px)}
+    .login-link{text-align:center;margin-top:16px;font-size:13px;color:#6b9e80}
+    .login-link a{color:#1a9b52;font-weight:800;text-decoration:none}
+    .alert{padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:14px;background:#ffe8e8;border-left:3px solid #e74c3c;color:#c0392b}
+    @media(max-width:480px){.form-row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="reg-box">
+  <div class="reg-header">
+    <div class="icon">📚</div>
+    <h2>Ro'yxatdan o'ting</h2>
+    <p>EduNet platformasiga qo'shiling</p>
+  </div>
+  <div class="reg-body">
+    {% if messages %}
+      {% for msg in messages %}<div class="alert">⚠️ {{ msg }}</div>{% endfor %}
+    {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Ism</label>
+          <input type="text" name="first_name" class="form-control" placeholder="Ismingiz" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Familiya</label>
+          <input type="text" name="last_name" class="form-control" placeholder="Familiyangiz" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Login</label>
+          <input type="text" name="username" class="form-control" placeholder="username" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Parol</label>
+          <input type="password" name="password" class="form-control" placeholder="parol" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kim siz?</label>
+        <select name="rol" class="form-control" required>
+          <option value="">-- Tanlang --</option>
+          <option value="oquvchi">O'quvchi</option>
+          <option value="ustoz">Ustoz</option>
+          <option value="ota_ona">Ota-ona</option>
+          <option value="fuqaro">Fuqaro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Viloyat</label>
+        <select name="viloyat" class="form-control">
+          <option value="">-- Viloyat tanlang --</option>
+          <option value="toshkent_sh">Toshkent shahri</option>
+          <option value="toshkent_v">Toshkent viloyati</option>
+          <option value="samarqand">Samarqand</option>
+          <option value="buxoro">Buxoro</option>
+          <option value="andijon">Andijon</option>
+          <option value="fargona">Farg'ona</option>
+          <option value="namangan">Namangan</option>
+          <option value="qashqadaryo">Qashqadaryo</option>
+          <option value="surxondaryo">Surxondaryo</option>
+          <option value="jizzax">Jizzax</option>
+          <option value="sirdaryo">Sirdaryo</option>
+          <option value="xorazm">Xorazm</option>
+          <option value="navoiy">Navoiy</option>
+          <option value="qoraqalpogiston">Qoraqalpog'iston</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Tuman</label>
+          <input type="text" name="tuman" class="form-control" placeholder="Tuman nomi">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Maktab raqami</label>
+          <input type="text" name="maktab_raqam" class="form-control" placeholder="Masalan: 12">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sinf (o'quvchi uchun)</label>
+        <select name="sinf" class="form-control">
+          <option value="">-- Sinf tanlang --</option>
+          {% for i in "123456789" %}
+          <option value="{{ i }}">{{ i }}-sinf</option>
+          {% endfor %}
+          <option value="10">10-sinf</option>
+          <option value="11">11-sinf</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-submit">Ro'yxatdan o'tish →</button>
+    </form>
+    <div class="login-link">Hisobingiz bormi? <a href="{% url 'login' %}">Kirish</a></div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{% extends 'dashboard_base.html' %}
+{% block title %}Post yozish{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>✍️ Post yozish</h1>
+  <p>Fikrlaringizni ulashing, she'r yozing yoki kuzatuvlaringizni baham ko'ring</p>
+</div>
+<div class="two-col">
+  <div class="card">
+    <div class="card-title" style="margin-bottom:20px">📝 Yangi post</div>
+    <form method="post" action="{% url 'mening_postim' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label">Post matni yoki she'ringiz</label>
+        <textarea name="matn" class="form-control" placeholder="Bugun nimalar o'rgandingiz? She'r, insho, fikr — barchasi qabul! AI agent baholaydi va reytingingizni oshiradi..." rows="8"></textarea>
+      </div>
+      <div style="display:flex;gap:12px">
+        <button type="submit" class="btn btn-primary">🚀 E'lon qilish</button>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline">Bekor qilish</a>
+      </div>
+    </form>
+  </div>
+  <div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:16px">💡 Maslahatlar</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        {% for tip in "1234" %}
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <div style="width:28px;height:28px;background:#e8faf1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">
+            {% if forloop.counter == 1 %}📖{% elif forloop.counter == 2 %}🎵{% elif forloop.counter == 3 %}💬{% else %}⭐{% endif %}
+          </div>
+          <p style="font-size:13px;color:#3d6b4f;font-weight:600;line-height:1.5">
+            {% if forloop.counter == 1 %}Bugun o'rgangan narsangizni qisqacha yozib ulashing
+            {% elif forloop.counter == 2 %}She'r yozsangiz, AI agent uni maxsus baholaydi
+            {% elif forloop.counter == 3 %}Qanchalik ko'p yozsangiz, reytingingiz shunchalik oshadi
+            {% else %}Eng yaxshi postlar bosh sahifada ko'rsatiladi{% endif %}
+          </p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

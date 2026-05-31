@@ -1,0 +1,25 @@
+{% extends 'dashboard_base.html' %}
+{% block title %}Mening maktabim{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>🏫 {{ maktab_raqam }}-maktab o'quvchilari</h1>
+  <p>Maktabingizning eng yaxshi o'quvchilari</p>
+</div>
+<div class="card">
+  <table class="reyting-table">
+    <thead><tr><th>#</th><th>O'quvchi</th><th>Sinf</th><th>Reyting</th></tr></thead>
+    <tbody>
+      {% for oq in oquvchilar %}
+      <tr>
+        <td><div class="rank-badge {% if forloop.counter == 1 %}rank-1{% elif forloop.counter == 2 %}rank-2{% elif forloop.counter == 3 %}rank-3{% else %}rank-other{% endif %}">{{ forloop.counter }}</div></td>
+        <td>{{ oq.get_full_name|default:oq.username }}</td>
+        <td>{{ oq.sinf }}-sinf</td>
+        <td><span class="badge badge-green">⭐ {{ oq.reyting }}</span></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4" style="text-align:center;padding:30px;color:#6b9e80">Hali o'quvchilar yo'q</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

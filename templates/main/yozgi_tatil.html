@@ -1,0 +1,30 @@
+{% extends 'dashboard_base.html' %}
+{% block title %}Yozgi tatil{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>☀️ Yozgi tatil uchun</h1>
+  <p>Yozda ham bilim olishni to'xtatmang! Vazifalar va onlayn darslar</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+  {% for v in vazifalar %}
+  <div class="card" style="border-left:4px solid {% if v.tur == 'test' %}#2ecc71{% elif v.tur == 'online' %}#00b4d8{% elif v.tur == 'amaliy' %}#f39c12{% else %}#9b59b6{% endif %}">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <div style="font-size:28px">
+        {% if v.tur == 'test' %}📝{% elif v.tur == 'online' %}💻{% elif v.tur == 'amaliy' %}🔬{% else %}✍️{% endif %}
+      </div>
+      <div>
+        <div style="font-size:15px;font-weight:800;color:#1a2e23">{{ v.nomi }}</div>
+        <span class="badge {% if v.tur == 'test' %}badge-green{% elif v.tur == 'online' %}badge-blue{% else %}badge-orange{% endif %}">
+          {{ v.tur|upper }}
+        </span>
+      </div>
+    </div>
+    <p style="font-size:13px;color:#6b9e80;margin-bottom:14px;line-height:1.5">{{ v.tavsif }}</p>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:13px;font-weight:800;color:#1a9b52">+{{ v.ball }} ball</span>
+      <button class="btn btn-primary" style="font-size:12px;padding:7px 14px">Boshlash →</button>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

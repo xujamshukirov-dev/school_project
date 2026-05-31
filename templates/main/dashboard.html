@@ -1,0 +1,122 @@
+{% extends 'dashboard_base.html' %}
+{% block title %}Bosh sahifa - EduNet{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>🏠 Bosh sahifa</h1>
+  <p>Salom, {{ request.user.get_full_name|default:request.user.username }}! Bugun ham yangi bilim olaylik.</p>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon">⭐</div>
+    <div class="stat-value">{{ request.user.reyting|floatformat:1 }}</div>
+    <div class="stat-label">Mening reytingim</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">🏫</div>
+    <div class="stat-value">{{ request.user.maktab_raqam|default:"—" }}-m</div>
+    <div class="stat-label">Mening maktabim</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">📚</div>
+    <div class="stat-value">{{ request.user.sinf|default:"—" }}</div>
+    <div class="stat-label">Sinf</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">📍</div>
+    <div class="stat-value" style="font-size:16px">{{ request.user.tuman|default:"—" }}</div>
+    <div class="stat-label">Tuman</div>
+  </div>
+</div>
+
+<div class="two-col" style="gap:24px">
+  <div>
+    <div class="card-header">
+      <div class="card-title">📰 So'nggi postlar</div>
+      <a href="{% url 'mening_postim' %}" class="btn btn-primary" style="font-size:13px;padding:8px 16px">+ Post yozish</a>
+    </div>
+    <div class="posts-feed">
+      {% for post in postlar %}
+      <div class="post-card">
+        <div class="post-author">
+          <div class="post-avatar">{{ post.muallif.first_name|first|upper }}{{ post.muallif.last_name|first|upper }}</div>
+          <div class="post-author-info">
+            <div class="author-name">{{ post.muallif.get_full_name|default:post.muallif.username }}</div>
+            <div class="post-meta">
+              {{ post.yaratilgan|date:"d.m.Y H:i" }}
+              {% if post.muallif.viloyat %}
+              &nbsp;·&nbsp;
+              <span class="maktab-chip">📍 {{ post.muallif.tuman }} · {{ post.muallif.maktab_raqam }}-maktab</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="post-text">{{ post.matn }}</div>
+        <div class="post-actions">
+          <button class="post-action-btn like-btn {% if request.user in post.liked_by.all %}liked{% endif %}" data-id="{{ post.id }}">
+            👍 <span class="like-count">{{ post.liked_by.count }}</span>
+          </button>
+          <span class="post-action-btn">⭐ {{ post.reyting|floatformat:1 }}</span>
+        </div>
+      </div>
+      {% empty %}
+      <div class="card" style="text-align:center;padding:40px">
+        <div style="font-size:48px;margin-bottom:12px">📝</div>
+        <p style="color:#6b9e80;font-weight:600">Hali post yo'q. Birinchi bo'lib yozing!</p>
+        <a href="{% url 'mening_postim' %}" class="btn btn-primary" style="margin-top:16px;display:inline-block">Post yozish</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header">
+        <div class="card-title">🏆 Top o'quvchilar</div>
+      </div>
+      <table class="reyting-table">
+        <thead><tr><th>#</th><th>O'quvchi</th><th>Reyting</th></tr></thead>
+        <tbody>
+          <tr><td><div class="rank-badge rank-1">1</div></td><td>Abdullayev Jasur</td><td><span class="badge badge-green">9.8</span></td></tr>
+          <tr><td><div class="rank-badge rank-2">2</div></td><td>Xoliqova Malika</td><td><span class="badge badge-green">9.6</span></td></tr>
+          <tr><td><div class="rank-badge rank-3">3</div></td><td>Toshmatov Sardor</td><td><span class="badge badge-green">9.4</span></td></tr>
+          <tr><td><div class="rank-badge rank-other">4</div></td><td>Yusupova Dilnoza</td><td><span class="badge badge-blue">9.1</span></td></tr>
+          <tr><td><div class="rank-badge rank-other">5</div></td><td>Karimov Bobur</td><td><span class="badge badge-blue">8.9</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📅 Bugungi darslar</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        {% for fan_key, fan_nomi in fanlar|slice:":5" %}
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#f0faf5;border-radius:10px">
+          <span style="font-size:13.5px;font-weight:700;color:#1a2e23">{{ fan_nomi }}</span>
+          <span class="badge badge-green">✓ Keldi</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.like-btn').forEach(btn => {
+  btn.addEventListener('click', async function() {
+    const id = this.dataset.id;
+    const res = await fetch(`/post/${id}/like/`, {
+      method: 'POST',
+      headers: {'X-CSRFToken': '{{ csrf_token }}'}
+    });
+    const data = await res.json();
+    this.querySelector('.like-count').textContent = data.count;
+    this.classList.toggle('liked', data.liked);
+  });
+});
+</script>
+{% endblock %}

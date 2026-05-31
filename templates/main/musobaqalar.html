@@ -1,0 +1,33 @@
+{% extends 'dashboard_base.html' %}
+{% block title %}Musobaqalar{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>🏆 Musobaqalar</h1>
+  <p>Barcha maktablar o'rtasidagi bellashuvlar</p>
+</div>
+<div class="three-col">
+  {% for m in musobaqalar %}
+  <div class="musobaqa-card">
+    <div class="musobaqa-icon">
+      {% if m.fan == 'Adabiyot' or m.fan == 'adabiyot' %}📖
+      {% elif m.fan == 'Matematika' or m.fan == 'matematika' %}➗
+      {% elif m.fan == 'Fizika' or m.fan == 'fizika' %}⚡
+      {% elif m.fan == 'Ona tili' or m.fan == 'ona_tili' %}🗣️
+      {% else %}🏅{% endif %}
+    </div>
+    <div style="font-size:15px;font-weight:800;color:#1a2e23;margin-bottom:8px">{{ m.nomi }}</div>
+    <div style="font-size:12.5px;color:#6b9e80;margin-bottom:12px;line-height:1.5">{{ m.tavsif }}</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <span class="badge badge-green">{{ m.fan }}</span>
+      <span style="font-size:11px;color:#b3dfc8;font-weight:600">📅 {{ m.boshlanish }} – {{ m.tugash }}</span>
+    </div>
+    <button class="btn btn-primary" style="width:100%;font-size:13px;padding:9px">Qatnashish →</button>
+  </div>
+  {% empty %}
+  <div style="grid-column:1/-1;text-align:center;padding:60px;color:#6b9e80">
+    <div style="font-size:56px;margin-bottom:12px">🏆</div>
+    <p>Hozircha musobaqalar yo'q</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'dashboard_base.html' %}
+{% block title %}Ustoz reytingi{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>👨‍🏫 Ustoz reytingi</h1>
+  <p>Ota-onalar, o'quvchilar va hamkasblar bahosi asosida</p>
+</div>
+<div class="card">
+  <table class="reyting-table">
+    <thead><tr><th>#</th><th>Ustoz</th><th>Fan</th><th>Maktab</th><th>Reyting</th><th>Ko'rsatkich</th></tr></thead>
+    <tbody>
+      {% for u in ustozlar %}
+      <tr>
+        <td><div class="rank-badge {% if forloop.counter == 1 %}rank-1{% elif forloop.counter == 2 %}rank-2{% elif forloop.counter == 3 %}rank-3{% else %}rank-other{% endif %}">{{ forloop.counter }}</div></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,#2ecc71,#00b4d8);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:14px">
+              {{ u.ismi|first|upper }}
+            </div>
+            <strong>{{ u.ismi }}</strong>
+          </div>
+        </td>
+        <td>{{ u.fan }}</td>
+        <td>{{ u.maktab }}</td>
+        <td><span class="badge badge-green">⭐ {{ u.reyting }}</span></td>
+        <td>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:{{ u.reyting|floatformat:0 }}0%"></div>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

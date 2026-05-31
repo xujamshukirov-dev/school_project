@@ -1,0 +1,25 @@
+{% extends 'dashboard_base.html' %}
+{% block title %}Tuman maktablari{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>🏘️ {{ tuman }} tumani - maktablar reytingi</h1>
+  <p>Tumandagi maktablar reytingi</p>
+</div>
+<div class="card">
+  <table class="reyting-table">
+    <thead>
+      <tr><th>#</th><th>Maktab raqami</th><th>Reyting</th><th>Progress</th></tr>
+    </thead>
+    <tbody>
+      {% for m in maktablar %}
+      <tr>
+        <td><div class="rank-badge {% if forloop.counter == 1 %}rank-1{% elif forloop.counter == 2 %}rank-2{% elif forloop.counter == 3 %}rank-3{% else %}rank-other{% endif %}">{{ forloop.counter }}</div></td>
+        <td><strong>{{ m.raqam }}-maktab</strong></td>
+        <td><span class="badge badge-green">⭐ {{ m.reyting }}</span></td>
+        <td><div class="progress-bar"><div class="progress-fill" style="width:{{ m.reyting }}%"></div></div></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'dashboard_base.html' %}
+{% block title %}Mening reytingim{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>⭐ Mening reytingim</h1>
+  <p>Barcha faoliyatlaringiz bo'yicha umumiy ko'rsatkich</p>
+</div>
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon">🏆</div>
+    <div class="stat-value">{{ reyting|floatformat:1 }}</div>
+    <div class="stat-label">Umumiy reyting</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">📊</div>
+    <div class="stat-value">{{ avg_baho }}</div>
+    <div class="stat-label">O'rtacha baho</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">📝</div>
+    <div class="stat-value">{{ test_natijalari.count }}</div>
+    <div class="stat-label">Testlar</div>
+  </div>
+</div>
+<div class="two-col">
+  <div class="card">
+    <div class="card-title" style="margin-bottom:16px">📝 Test natijalari</div>
+    {% if test_natijalari %}
+    <table class="reyting-table">
+      <thead><tr><th>Fan</th><th>Mavzu</th><th>Ball</th></tr></thead>
+      <tbody>
+        {% for t in test_natijalari %}
+        <tr>
+          <td>{{ t.fan }}</td>
+          <td>{{ t.mavzu }}</td>
+          <td><span class="badge {% if t.foiz >= 80 %}badge-green{% elif t.foiz >= 60 %}badge-blue{% else %}badge-orange{% endif %}">{{ t.ball }}/{{ t.max_ball }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div style="text-align:center;padding:30px;color:#6b9e80">
+      <div style="font-size:40px;margin-bottom:8px">📝</div>
+      <p>Hali test topshirilmagan</p>
+    </div>
+    {% endif %}
+  </div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:16px">📅 So'nggi davomatlar</div>
+    {% if davomatlar %}
+    <table class="reyting-table">
+      <thead><tr><th>Sana</th><th>Fan</th><th>Baho</th></tr></thead>
+      <tbody>
+        {% for d in davomatlar|slice:":8" %}
+        <tr>
+          <td>{{ d.sana }}</td>
+          <td>{{ d.fan }}</td>
+          <td>{% if d.baho %}<strong>{{ d.baho }}</strong>{% else %}—{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div style="text-align:center;padding:30px;color:#6b9e80">Ma'lumot yo'q</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

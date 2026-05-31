@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="app-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🎓</div>
+      <h2>EduNet</h2>
+      <p>Maktab platformasi</p>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="avatar">{{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}</div>
+      <div class="user-info">
+        <div class="name">{{ request.user.get_full_name|default:request.user.username }}</div>
+        <span class="rol">{{ request.user.get_rol_display }}</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-label">Reytinglar</div>
+      <a href="{% url 'uzbekiston_maktablari' %}" class="{% if request.resolver_match.url_name == 'uzbekiston_maktablari' %}active{% endif %}">
+        <span class="nav-icon">🇺🇿</span> O'zbekiston maktablari
+      </a>
+      <a href="{% url 'viloyat_maktablari' %}" class="{% if request.resolver_match.url_name == 'viloyat_maktablari' %}active{% endif %}">
+        <span class="nav-icon">🏙️</span> Viloyat maktablari
+      </a>
+      <a href="{% url 'tuman_maktablari' %}" class="{% if request.resolver_match.url_name == 'tuman_maktablari' %}active{% endif %}">
+        <span class="nav-icon">🏘️</span> Tuman maktablari
+      </a>
+      <a href="{% url 'mening_maktabim' %}" class="{% if request.resolver_match.url_name == 'mening_maktabim' %}active{% endif %}">
+        <span class="nav-icon">🏫</span> Mening maktabim
+      </a>
+
+      <div class="nav-label">Ta'lim</div>
+      <a href="{% url 'quiz_tests' %}" class="{% if request.resolver_match.url_name == 'quiz_tests' %}active{% endif %}">
+        <span class="nav-icon">📝</span> Quiz Tests
+      </a>
+      <a href="{% url 'yozgi_tatil' %}" class="{% if request.resolver_match.url_name == 'yozgi_tatil' %}active{% endif %}">
+        <span class="nav-icon">☀️</span> Yozgi tatil uchun
+      </a>
+      <a href="{% url 'musobaqalar' %}" class="{% if request.resolver_match.url_name == 'musobaqalar' %}active{% endif %}">
+        <span class="nav-icon">🏆</span> Musobaqalar
+      </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <a href="{% url 'logout' %}">
+        <span>🚪</span> Chiqish
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="main-wrapper">
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <a href="{% url 'davomat_baho' %}" class="top-btn {% if request.resolver_match.url_name == 'davomat_baho' %}active{% endif %}">
+        <span class="btn-icon">📋</span> Davomat va baho
+      </a>
+      <a href="{% url 'mening_postim' %}" class="top-btn {% if request.resolver_match.url_name == 'mening_postim' %}active{% endif %}">
+        <span class="btn-icon">✍️</span> Mening postim
+      </a>
+      <a href="{% url 'mening_reytingim' %}" class="top-btn {% if request.resolver_match.url_name == 'mening_reytingim' %}active{% endif %}">
+        <span class="btn-icon">⭐</span> Mening reytingim
+      </a>
+      <a href="{% url 'mening_xulqim' %}" class="top-btn {% if request.resolver_match.url_name == 'mening_xulqim' %}active{% endif %}">
+        <span class="btn-icon">😊</span> Mening xulqim
+      </a>
+      <a href="{% url 'ustoz_reytingi' %}" class="top-btn {% if request.resolver_match.url_name == 'ustoz_reytingi' %}active{% endif %}">
+        <span class="btn-icon">👨‍🏫</span> Ustoz reytingi
+      </a>
+      <a href="{% url 'maktab_reytingi' %}" class="top-btn {% if request.resolver_match.url_name == 'maktab_reytingi' %}active{% endif %}">
+        <span class="btn-icon">🏫</span> Maktab reytingi
+      </a>
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <main class="page-content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}

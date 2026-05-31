@@ -1,0 +1,58 @@
+{% extends 'dashboard_base.html' %}
+{% block title %}Mening xulqim{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>😊 Mening xulqim</h1>
+  <p>Ustoz va sinfdoshlarning fikrlari asosida shakllanadi</p>
+</div>
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon">⭐</div>
+    <div class="stat-value">{{ avg_ball }}/10</div>
+    <div class="stat-label">O'rtacha ball</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">💬</div>
+    <div class="stat-value">{{ baholar|length }}</div>
+    <div class="stat-label">Fikrlar soni</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">🎖️</div>
+    <div class="stat-value">A+</div>
+    <div class="stat-label">Xulq darajasi</div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title" style="margin-bottom:20px">💬 Fikrlar</div>
+  <div style="display:flex;flex-direction:column;gap:14px">
+    {% for b in baholar %}
+    <div style="background:#f8fffe;border:1px solid #ddf2ea;border-radius:12px;padding:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:34px;height:34px;background:linear-gradient(135deg,#2ecc71,#1a9b52);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px">
+            {% if b.rol == 'Ustoz' %}👨‍🏫{% else %}👦{% endif %}
+          </div>
+          <span style="font-size:13px;font-weight:700;color:#3d6b4f">{{ b.rol }}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px">
+          {% for i in "1234567890" %}
+            {% if forloop.counter <= b.ball %}
+            <span style="color:#f39c12;font-size:12px">★</span>
+            {% else %}
+            <span style="color:#ddf2ea;font-size:12px">★</span>
+            {% endif %}
+          {% endfor %}
+          <span style="font-weight:900;color:#1a9b52;font-size:13px;margin-left:4px">{{ b.ball }}/10</span>
+        </div>
+      </div>
+      <p style="font-size:14px;color:#1a2e23;line-height:1.6">{{ b.fikr }}</p>
+    </div>
+    {% empty %}
+    <div style="text-align:center;padding:40px;color:#6b9e80">
+      <div style="font-size:48px;margin-bottom:12px">💬</div>
+      <p>Hali fikr bildirilmagan</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
